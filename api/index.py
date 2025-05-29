@@ -10,5 +10,9 @@ from app import app
 # This is required for Vercel
 application = app
 
+# For Vercel serverless functions
+def handler(request, context):
+    return app(request.environ, context)
+
 if __name__ == "__main__":
     app.run()
