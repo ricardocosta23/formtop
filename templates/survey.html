@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa de Experiência de Viagem - {{ survey.trip_name }}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="survey-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-xl-6">
+                    <div class="survey-card">
+                        <!-- Header -->
+                        <div class="survey-header">
+                            <div class="icon-wrapper">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <h1 class="survey-title">Como foi sua experiência de viagem?</h1>
+                            <p class="survey-subtitle">Seu feedback nos ajuda a melhorar nossos serviços</p>
+                        </div>
+
+                        <!-- Trip Details -->
+                        <div class="trip-details">
+                            <div class="detail-item">
+                                <i class="fas fa-building"></i>
+                                <span class="detail-label">Nome da empresa:</span>
+                                <span class="detail-value">{{ survey.company_name }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span class="detail-label">Destino:</span>
+                                <span class="detail-value">{{ survey.location }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span class="detail-label">Data:</span>
+                                <span class="detail-value">{{ survey.date }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-route"></i>
+                                <span class="detail-label">Viagem:</span>
+                                <span class="detail-value">{{ survey.trip_name }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Survey Form -->
+                        <form method="POST" action="{{ url_for('submit_survey', survey_id=survey.survey_id) }}" id="surveyForm">
+                            <!-- NPS Rating -->
+                            <div class="rating-section">
+                                <h3 class="rating-question">
+                                    Em uma escala de 0-10, qual a probabilidade de você recomendar nossos serviços de viagem para um amigo ou colega?
+                                </h3>
+
+                                <div class="rating-scale">
+                                    <div class="scale-labels">
+                                        <span class="scale-label-left">Nada provável</span>
+                                        <span class="scale-label-right">Extremamente provável</span>
+                                    </div>
+
+                                    <div class="rating-squares" id="ratingSquares">
+                                        {% for i in range(11) %}
+                                        <div class="rating-square" data-value="{{ i }}">
+                                            <span class="rating-number">{{ i }}</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <input type="hidden" name="nps_score" id="npsScore" required>
+                                <div class="rating-error" id="ratingError">
+                                    Por favor, selecione uma avaliação antes de continuar
+                                </div>
+                            </div>
+
+                            <!-- Feedback Section -->
+                            <div class="feedback-section">
+                                <label for="feedback" class="feedback-label">
+                                    <i class="fas fa-comment-alt"></i>
+                                    Conte-nos mais sobre sua experiência (opcional)
+                                </label>
+                                <textarea 
+                                    name="feedback" 
+                                    id="feedback" 
+                                    class="feedback-textarea"
+                                    placeholder="Compartilhe comentários adicionais, sugestões ou detalhes sobre sua experiência de viagem..."
+                                    rows="4"
+                                ></textarea>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="submit-section">
+                                <button type="submit" class="submit-btn" id="submitBtn">
+                                    <i class="fas fa-paper-plane"></i>
+                                    Enviar Feedback
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Flash Messages -->
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                <div class="flash-messages">
+                                    {% for category, message in messages %}
+                                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
+                                            {{ message }}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/survey.js') }}"></script>
+</body>
+</html>
